@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mansi — Flutter & Android Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1120;
+    --surface:#121A2E;
+    --surface-2:#182240;
+    --accent:#38BDF8;
+    --accent-2:#FB7185;
+    --text:#E7ECF5;
+    --text-bright:#FFFFFF;
+    --muted:#A8B5C8;
+    --line: rgba(255,255,255,0.08);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(circle at 12% 18%, rgba(56,189,248,0.14), transparent 42%),
+      radial-gradient(circle at 88% 12%, rgba(251,113,133,0.12), transparent 40%),
+      radial-gradient(circle at 80% 85%, rgba(56,189,248,0.10), transparent 45%),
+      var(--bg);
+    background-attachment:fixed;
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+    position:relative;
+  }
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    opacity:0.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='1' cy='1' r='1' fill='%2338BDF8' fill-opacity='0.18'/%3E%3C/svg%3E");
+    background-size:40px 40px;
+  }
+  .wrap{position:relative; z-index:1;}
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  .wrap{
+    display:grid;
+    grid-template-columns: 1fr 380px;
+    max-width:1200px;
+    margin:0 auto;
+    gap:60px;
+    padding:0 32px;
+  }
+  @media(max-width:900px){
+    .wrap{grid-template-columns:1fr; gap:24px; padding:0 20px;}
+    .phone-col{display:none;}
+  }
+  .phone-col{
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .phone{
+    width:280px;
+    height:580px;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(56,189,248,0.35), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(251,113,133,0.35), transparent 50%),
+      radial-gradient(circle at 70% 20%, rgba(251,113,133,0.15), transparent 35%),
+      linear-gradient(160deg, #1a2540, #0d1428);
+    border-radius:36px;
+    border:2px solid var(--line);
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), inset 0 0 0 8px #0B1120;
+    position:relative;
+    overflow:hidden;
+    padding:22px 18px;
+  }
+  .phone::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0.4;
+    background-image:radial-gradient(circle, rgba(255,255,255,0.35) 1px, transparent 1px);
+    background-size:26px 26px;
+    mask-image:radial-gradient(circle at 50% 40%, black, transparent 75%);
+  }
+  .phone::before{
+    content:'';
+    position:absolute;
+    top:14px; left:50%;
+    transform:translateX(-50%);
+    width:70px; height:6px;
+    border-radius:4px;
+    background:rgba(255,255,255,0.15);
+  }
+  .phone-screen{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    gap:12px;
+    padding-top:20px;
+    position:relative;
+    z-index:1;
+  }
+  .phone-eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--accent-2);
+    text-transform:uppercase;
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .phone-title{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px;
+    font-weight:600;
+    line-height:1.25;
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity .5s ease .05s, transform .5s ease .05s;
+  }
+  .phone-body{
+    font-size:13px;
+    color:var(--text);
+    line-height:1.55;
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity .5s ease .1s, transform .5s ease .1s;
+  }
+  .phone-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:2px;
+    opacity:0;
+    transition:opacity .5s ease .15s;
+  }
+  .phone-tags span{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    padding:5px 9px;
+    border-radius:20px;
+    background:rgba(56,189,248,0.15);
+    color:var(--accent);
+    border:1px solid rgba(56,189,248,0.3);
+  }
+  .phone-projects-shelf {
+    margin-top:auto;
+    margin-bottom:25px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    opacity:0;
+    transform:translateY(10px);
+    transition: opacity .5s ease .2s, transform .5s ease .2s;
+  }
+  .phone-projects-shelf h5 {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+  .phone-projects-list {
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+  }
+  .phone-project-item {
+    font-size:11px;
+    padding:6px 8px;
+    background: var(--surface-2);
+    border-radius: 6px;
+    color: var(--text-bright);
+    border-left: 2px solid var(--accent);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .phone.is-active .phone-eyebrow,
+  .phone.is-active .phone-title,
+  .phone.is-active .phone-body,
+  .phone.is-active .phone-tags,
+  .phone.is-active .phone-projects-shelf{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .phone-progress{
+    position:absolute;
+    bottom:20px; left:22px; right:22px;
+    display:flex;
+    gap:5px;
+    z-index:1;
+  }
+  .phone-progress i{
+    flex:1;
+    height:3px;
+    border-radius:3px;
+    background:rgba(255,255,255,0.12);
+    overflow:hidden;
+  }
+  .phone-progress i span{
+    display:block;
+    height:100%;
+    width:0%;
+    background:var(--accent);
+    transition:width .3s linear;
+  }
+  .content{padding-bottom:120px;}
+  section.scene{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:80px 0;
+    opacity:0.85;
+    transition:opacity .35s ease;
+}
+section.scene.in-view{
+    opacity:1;
+}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--accent-2);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .scene h2{
+    font-size:clamp(28px, 4vw, 42px);
+    font-weight:700;
+    margin-bottom:18px;
+    line-height:1.15;
+    color: var(--text-bright);
+  }
+  .scene p{
+    color: #CBD5E1;
+    font-size:16px;
+    line-height:1.7;
+    max-width:60ch;
+    margin-bottom:14px;
+  }
+  .scene a{color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(56,189,248,0.4);}
+  .logo-badge{
+    position:fixed;
+    top:24px; left:24px;
+    z-index:50;
+    width:44px; height:44px;
+    border-radius:12px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:16px;
+    color:#08101F;
+    box-shadow:0 8px 24px -6px rgba(56,189,248,0.45);
+  }
+  @media(max-width:900px){ .logo-badge{ top:16px; left:16px; width:38px; height:38px; font-size:14px; } }
+  .avatar-wrap{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    margin-bottom:22px;
+  }
+  .avatar{
+    width:84px; height:84px;
+    border-radius:50%;
+    padding:3px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    flex-shrink:0;
+  }
+  .avatar img{
+    width:100%; height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+    background:var(--surface);
+  }
+  .avatar-fallback{
+    width:100%; height:100%;
+    border-radius:50%;
+    background:radial-gradient(circle at 30% 25%, #1c2a4a, var(--surface-2) 70%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .avatar-fallback svg{ width:70%; height:70%; }
+  #hero{
+    min-height:100vh;
+    padding-top:40px;
+    position:relative;
+  }
+  .hero-bg{
+    position:absolute;
+    top:-10%; right:-15%;
+    width:75%;
+    max-width:640px;
+    height:auto;
+    z-index:-1;
+    opacity:0.55;
+    pointer-events:none;
+  }
+  @media(max-width:900px){ .hero-bg{ display:none; } }
+  #hero h1{
+    font-size:clamp(38px, 6vw, 64px);
+    font-weight:700;
+    line-height:1.05;
+    margin-bottom:10px;
+    color: var(--text-bright);
+  }
+  #hero .role{
+    font-family:'JetBrains Mono', monospace;
+    color:var(--accent);
+    font-size:16px;
+    margin-bottom:26px;
+  }
+  #hero p{font-size:18px; max-width:52ch;}
+  .cta-row{display:flex; gap:14px; margin-top:30px; flex-wrap:wrap;}
+  .cta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    padding:12px 20px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    color:var(--text);
+    text-decoration:none;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .cta.primary{background:var(--accent); border-color:var(--accent); color:#08101F; font-weight:600;}
+  .cta:hover{border-color:var(--accent);}
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:10px;}
+  @media(max-width:520px){.grid-2{grid-template-columns:1fr;}}
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 20px;
+  }
+  .card h4{font-size:14px; color:var(--accent-2); margin-bottom:8px; font-family:'JetBrains Mono', monospace; text-transform:uppercase; letter-spacing:.06em;}
+  .card ul{list-style:none; display:flex; flex-wrap:wrap; gap:8px;}
+  .card ul li{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    background:var(--surface-2);
+    padding:5px 10px;
+    border-radius:6px;
+    color:var(--text-bright);
+  }
+  .timeline{margin-top:10px; border-left:2px solid var(--line); padding-left:24px;}
+  .t-item{position:relative; margin-bottom:26px;}
+  .t-item::before{
+    content:'';
+    position:absolute;
+    left:-30px; top:4px;
+    width:10px; height:10px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 4px rgba(56,189,248,0.15);
+  }
+  .t-item h4{font-size:17px; margin-bottom:4px; color: var(--text-bright);}
+  .t-item .cert{
+    display:inline-block;
+    margin-top:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--accent-2);
+    background:rgba(251,113,133,0.1);
+    border:1px solid rgba(251,113,133,0.25);
+    padding:4px 10px;
+    border-radius:20px;
+  }
+.project{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 26px 28px;
+    margin-bottom: 22px;
+    transition: all .3s ease;
+}
+.project:hover{
+    border-color: rgba(56,189,248,.35);
+    background: #15203a;
+    transform: translateY(-3px);
+}
+.project-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:14px;
+}
+.project-head h3{
+    font-size:20px;
+    font-weight:600;
+    color:var(--text-bright);
+}
+.project-head span{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--accent-2);
+}
+.project p{
+    color:var(--text);
+    font-size:15px;
+    line-height:1.7;
+    margin-bottom:14px;
+}
+.project ul{
+    margin-top:12px;
+    padding-left:22px;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.8;
+}
+.project ul li{
+    margin-bottom:8px;
+}
+.project ul li::marker{
+    color:var(--accent);
+}
+  footer{
+    padding:60px 0 40px;
+    border-top:1px solid var(--line);
+    margin-top:20px;
+  }
+  footer p{color:var(--muted); font-size:14px;}
+  .contact-links{display:flex; gap:18px; margin-top:14px; flex-wrap:wrap;}
+  .contact-links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--text);
+    text-decoration:none;
+    border:1px solid var(--line);
+    padding:8px 14px;
+    border-radius:8px;
+  }
+  .contact-links a:hover{border-color:var(--accent); color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div class="logo-badge" aria-label="MS logo">MS</div>
+
+<div class="wrap">
+  <div class="phone-col">
+    <div class="phone" id="phone">
+      <div class="phone-screen">
+        <div class="phone-eyebrow" id="p-eyebrow">Intro</div>
+        <div class="phone-title" id="p-title">Mansi Sharma</div>
+        <div class="phone-body" id="p-body">Flutter & Android Developer</div>
+        <div class="phone-tags" id="p-tags">
+          <span>Flutter</span><span>Kotlin</span><span>Firebase</span>
+        </div>
+        <div class="phone-projects-shelf">
+          <h5>Active Apps Grid</h5>
+          <div class="phone-projects-list">
+            <div class="phone-project-item">📦 Medical Store App</div>
+            <div class="phone-project-item">🤝 DealConnect Hub</div>
+            <div class="phone-project-item">🔥 CandleRush UI</div>
+            <div class="phone-project-item">👁️ Human Detect Vision</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-progress" id="p-progress"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <section class="scene" id="hero" data-eyebrow="Intro" data-title="Mansi" data-body="Self-taught Application Architect" data-tags="Flutter,Kotlin,Firebase">
+      <svg class="hero-bg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="heroGrad1" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#38BDF8"/>
+            <stop offset="1" stop-color="#FB7185"/>
+          </linearGradient>
+          <linearGradient id="heroGrad2" x1="500" y1="0" x2="0" y2="500" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#FB7185"/>
+            <stop offset="1" stop-color="#38BDF8"/>
+          </linearGradient>
+        </defs>
+        <circle cx="330" cy="180" r="150" stroke="url(#heroGrad1)" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.5"/>
+        <circle cx="330" cy="180" r="110" stroke="url(#heroGrad1)" stroke-width="1" opacity="0.35"/>
+        <rect x="230" y="90" width="150" height="260" rx="24" fill="#121A2E" stroke="url(#heroGrad1)" stroke-width="2"/>
+        <rect x="248" y="118" width="114" height="70" rx="10" fill="url(#heroGrad2)" opacity="0.25"/>
+        <rect x="248" y="198" width="114" height="14" rx="7" fill="#38BDF8" opacity="0.6"/>
+        <rect x="248" y="222" width="80" height="14" rx="7" fill="#FB7185" opacity="0.5"/>
+        <rect x="248" y="246" width="114" height="60" rx="10" fill="#182240"/>
+        <circle cx="270" cy="276" r="10" fill="url(#heroGrad1)"/>
+        <rect x="290" y="268" width="60" height="8" rx="4" fill="#38BDF8" opacity="0.5"/>
+        <rect x="290" y="282" width="40" height="8" rx="4" fill="#FB7185" opacity="0.5"/>
+        <circle cx="130" cy="360" r="60" fill="url(#heroGrad2)" opacity="0.12"/>
+        <circle cx="410" cy="400" r="40" fill="url(#heroGrad1)" opacity="0.15"/>
+        <path d="M60 120 L60 160 L100 160" stroke="#38BDF8" stroke-width="2" opacity="0.4" fill="none"/>
+        <path d="M440 300 L440 260 L400 260" stroke="#FB7185" stroke-width="2" opacity="0.4" fill="none"/>
+      </svg>
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <!-- Replace the div below with <img src="your-photo.jpg" alt="Mansi Sharma"> once you have a real photo file -->
+          <div class="avatar-fallback">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="avatarGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#38BDF8"/>
+                  <stop offset="1" stop-color="#FB7185"/>
+                </linearGradient>
+              </defs>
+              <circle cx="32" cy="24" r="12" fill="url(#avatarGrad)"/>
+              <path d="M10 56c2-13 12-20 22-20s20 7 22 20" stroke="url(#avatarGrad)" stroke-width="5" stroke-linecap="round" fill="none"/>
+              <path d="M24 22.5l-4 3 4 3M40 22.5l4 3-4 3" stroke="#0B1120" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="role mono">FLUTTER · ANDROID · DEV-TESTING</div>
+      </div>
+      <h1>Mansi</h1>
+      <p>I build cross-platform apps with Flutter and native Android solutions using MVVM architecture and REST API integration — refining my mobile skills through aggressive self-directed engineering.</p>
+      <div class="cta-row">
+        <a class="cta primary" href="https://github.com/mansiisharmaa" target="_blank">View GitHub →</a>
+        <a class="cta" href="https://www.linkedin.com/in/mansi-sharma-android/" target="_blank">Connect on LinkedIn</a>
+      </div>
+    </section>
+
+    <section class="scene" id="summary" data-eyebrow="Summary" data-title="How I Build" data-body="MVVM · Rest Verification " data-tags="MVVM,Postman,Testing"> <div class="eyebrow">Professional Summary</div> <h2>MCA Graduate, Hands-On Builder</h2>
+      <p>MCA graduate specializing in Flutter development and cross-platform mobile apps, with hands-on experience in state management, 
+        UI implementation, and basic software testing.".</p>
+      <p><strong>Mobile Testing for Beginners:</strong> Focusing on app stability and reliability,
+         I develop Flutter applications structured around clean software engineering principles. By leveraging the MVVM architecture, I enforce a strict separation between UI components and core business logic, ensuring codebases remain modular, scalable, and easy to maintain. My development philosophy extends heavily into quality assurance—I routinely test API schemas with Postman to prevent server integration failures, 
+        validate local persistence layers with SQLite to maintain data integrity across sessions, and actively monitor platform lifecycles to catch potential memory leaks or runtime crashes before code reaches production.</p>
+    </section>
+
+    <section class="scene" id="skills" data-eyebrow="Skills" data-title="Toolkit" data-body="Languages, mobile, backend & tools" data-tags="Dart,Kotlin,SQLite">
+      <div class="eyebrow">Technical Skills</div>
+      <h2>What I build with</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h4>Languages</h4>
+          <ul><li>Kotlin</li><li>Dart</li><li>Java</li><li>JavaScript</li><li>Python</li></ul>
+        </div>
+        <div class="card">
+          <h4>Mobile</h4>
+          <ul><li>Flutter</li><li>Android SDK</li><li>Jetpack</li><li>Android Studio</li></ul>
+        </div>
+        <div class="card">
+          <h4>Backend</h4>
+          <ul><li>Firebase Auth</li><li>Cloud Firestore</li><li>Retrofit</li><li>REST APIs</li><li>SQLite</li></ul>
+        </div>
+        <div class="card">
+          <h4>Tools & QA</h4>
+          <ul><li>Git / GitHub</li><li>Postman</li><li>Jira Bug Track</li><li>MVVM</li><li>State Validation</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="education" data-eyebrow="Education" data-title="Academic Path" data-body="MCA (DAV University) , BCA (KMV College)" data-tags="MCA,BCA,Self-Driven">
+      <div class="eyebrow">Education</div>
+      <h2>Academic background</h2>
+      <div class="timeline">
+        <div class="t-item">
+          <h4>Master of Computer Applications</h4>
+          <div class="mono" style="color:var(--accent-2); font-size:13px;">DAV University, Jalandhar · 2024 – 2026 · GPA 6.9</div>
+          <p style="margin-top:6px; font-size:14px;">Learned advanced computer science topics while self-teaching Flutter and Dart to build mobile apps. Focused on making clean, reliable apps by testing
+             APIs with Postman, checking database accuracy with SQLite, and fixing app crashes before release..</p>
+        </div>
+        <div class="t-item">
+          <h4>Bachelor of Computer Applications</h4>
+          <div class="mono" style="color:var(--muted); font-size:13px;">KMV College, Jalandhar · 2021 – 2024 · GPA 6.4</div>
+                    <p style="margin-top:6px; font-size:14px;">Built a strong foundation in core computer science, focusing on programming, logic, and database management. Developed
+                       the fundamental technical skills needed to start building software and mobile applications..</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="internships" data-eyebrow="Internships" data-title="Where I've worked" data-body="Coder Root · O7 Services · Bolt IoT" data-tags="Certified">
+      <div class="eyebrow">Internships & Certifications</div>
+      <h2>Hands-on experience</h2>
+      <div class="timeline">
+        <div class="t-item">
+          <h4>Coder Root Company — Flutter & Dart Developer</h4>
+          <p style="margin:0;">Built 2+ cross-platform Flutter apps, full lifecycle from UI to REST API and Firebase integration. Performed hardware troubleshooting and validated app performance with testing equipment.</p>
+          <span class="cert">🏅 Mobile Developer with Flutter — Certified</span>
+        </div>
+        <div class="t-item">
+          <h4>O7 Services — Android Developer (Kotlin)</h4>
+          <p style="margin:0;">Developed native Android apps in Kotlin with MVVM architecture, Retrofit, and lifecycle management. Applied Material Design guidelines.</p>
+          <span class="cert">🏅 Kotlin Android Development — Certified</span>
+        </div>
+        <div class="t-item">
+          <h4>Bolt IoT — Web Development</h4>
+          <p style="margin:0;">Built IoT dashboards using HTML5, CSS3, and JavaScript with live sensor data integration.</p>
+          <span class="cert">🏅 Web Development — Certified</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="achievements" data-eyebrow="Achievements" data-title="Leadership Profiles" data-body="Best NCC Cadet · Commander Systems" data-tags="Leadership,Logistics,Operations">
+      <div class="eyebrow">Achievements</div>
+      <h2>Leadership off-screen</h2>
+      <p>Awarded <strong>Best NCC Cadet</strong> among 200+ candidates and selected to represent my institution at the prestigious National NCC Camp in Hyderabad.</p>
+      <p>Commanded a 40+ member NCC unit. This responsibility sharpened operational skills directly transferable to engineering delivery roles, including structured peer-to-peer accountability systems, rigorous training coordination timelines, complex event logistics management, and handling high-pressure deployment schedules smoothly.</p>
+    </section>
+
+    <section class="scene" id="projects" data-eyebrow="Projects" data-title="App Portfolio Hub" data-body="All active projects listed inside the mobile frame" data-tags="SQFlite,Firebase,Kotlin">
+      <div class="eyebrow">Projects</div>
+      <h2>What I've built</h2>
+
+      <div class="project">
+        <div class="project-head">
+          <h3>Medical Store Inventory App</h3>
+          <span>Jun 2025 – Jul 2025</span>
+        </div>
+        <p>Offline-first pharmacy inventory app managing medicines, suppliers, and billing records.</p>
+        <ul>
+          <li>Built using SQFlite local database — fully offline capable</li>
+          <li>Implemented full CRUD operations with data validation</li>
+          <li>Managed bug tracking and tasks using Jira</li>
+        </ul>
+      </div>
+
+      <div class="project">
+        <div class="project-head">
+          <h3>DealConnect App</h3>
+          <span>Mar 2026 – Apr 2026</span>
+        </div>
+        <p>Multi-role marketplace app with a full Firebase backend.</p>
+        <ul>
+          <li>Auth with admin-approval gating; Firestore models for admin, buyer, seller roles</li>
+          <li>Real-time Firestore listeners — UI syncs with zero manual refresh</li>
+          <li>Used Postman to validate REST APIs and ensure endpoint reliability</li>
+        </ul>
+      </div>
+
+      <div class="project">
+        <div class="project-head">
+          <h3>CandleRush — Multi-Screen Android App</h3>
+          <span>Feb 2024 – Mar 2024</span>
+        </div>
+        <p>5-screen native Android app in Kotlin with full navigation stack.</p>
+        <ul>
+          <li>Activity & Fragment lifecycle management — no memory leaks or UI state loss</li>
+          <li>Material Design: RecyclerView, BottomNavigationView, custom XML layouts</li>
+        </ul>
+      </div>
+
+      <div class="project">
+        <div class="project-head">
+          <h3>Human Detection</h3>
+          <span>Feb 2025</span>
+        </div>
+        <p>Computer vision project applying HOG with OpenCV.</p>
+        <ul>
+          <li>Detected people in images with 85% accuracy on test set</li>
+          <li>Demonstrates Python proficiency beyond mobile development</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <div class="eyebrow">Let's connect</div>
+      <p>Open to Flutter & Android development opportunities.</p>
+      <div class="contact-links">
+        <a href="mailto:mansisharma61703@gmail.com">✉ mansisharma61703@gmail.com</a>
+        <a href="https://www.linkedin.com/in/mansi-sharma-android/" target="_blank">in/mansi-sharma-android</a>
+        <a href="https://github.com/mansiisharmaa" target="_blank">github.com/mansiisharmaa</a>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  const scenes = document.querySelectorAll('.scene');
+  const phone = document.getElementById('phone');
+  const pEyebrow = document.getElementById('p-eyebrow');
+  const pTitle = document.getElementById('p-title');
+  const pBody = document.getElementById('p-body');
+  const pTags = document.getElementById('p-tags');
+  const pProgress = document.getElementById('p-progress');
+
+  scenes.forEach(() => {
+    const i = document.createElement('i');
+    i.innerHTML = '<span></span>';
+    pProgress.appendChild(i);
+  });
+  const segments = pProgress.querySelectorAll('i span');
+
+  function updatePhone(scene, idx){
+    phone.classList.remove('is-active');
+    void phone.offsetWidth;
+    pEyebrow.textContent = scene.dataset.eyebrow;
+    pTitle.textContent = scene.dataset.title;
+    pBody.textContent = scene.dataset.body;
+    pTags.innerHTML = scene.dataset.tags.split(',').map(t => `<span>${t}</span>`).join('');
+    phone.classList.add('is-active');
+
+    segments.forEach((s, i) => { s.style.width = i <= idx ? '100%' : '0%'; });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const idx = Array.from(scenes).indexOf(entry.target);
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        updatePhone(entry.target, idx);
+      } else {
+        entry.target.classList.remove('in-view');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  scenes.forEach(s => observer.observe(s));
+
+  updatePhone(scenes[0], 0);
+  scenes[0].classList.add('in-view');
+</script>
+
+</body>
+</html>
